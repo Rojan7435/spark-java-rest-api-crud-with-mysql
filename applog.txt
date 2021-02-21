@@ -1,0 +1,4 @@
+INFO    2021-02-21 21:16:46,276 [qtp610693548-15] com.example.sparkjava.Main  - {
+    "name": "anisha Maharjan",
+    "email": "admin@moco.com.nps"
+}

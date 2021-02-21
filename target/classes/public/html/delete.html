@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Delete person</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.1.1/jquery.serializejson.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div>Delete Person</div>
+        <br>
+        <div>
+            <form method="delete" id="ajaxform">
+                <div>
+                    <label>Id</label>
+                    <select id="id" name="id">
+                        <option>--- Select Person Name ---</option>
+                    </select>
+                </div>
+                <br>
+                <div id="body" style="display: none">
+                    <label>Name: </label>
+                    <input type="text" id="name" name="name" disabled="">
+                    <br><br>
+                    <label>Email </label>
+                    <input type="email" id="email" name="email" style="width: 200px;" disabled="">
+                </div>
+                <p>
+                    <br>
+                    <input type="button" value="Delete" id="delete">
+                </p>
+            </form>
+            <div id="response"></div>
+        </div>
+    </body>
+</html>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/getAll",
+            dataType: "json",
+            success: function (data)
+            {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                    $('<option>').val(data[i].id).text(data[i].name).appendTo($("#id"));
+                }
+                console.log(data);
+            }
+        });
+    });
+    $(document).ready(function () {
+        $("#id").on('change', function () {
+            var id = $("#id").val();
+            $.ajax({
+                type: "GET",
+                url: "/getById?id=" + id,
+                dataType: "json",
+                success: function (data)
+                {
+                    $('#body').removeAttr('style');
+                    $('#name').val(data[0].name);
+                    $('#email').val(data[0].email);
+                    console.log(data);
+                }
+            });
+        });
+
+    });
+    $(document).ready(function () {
+        $("#delete").click(function (e) {
+            var id = $("#id").val();
+            $.ajax({
+                type: "DELETE",
+                url: "/delete?id="+id,
+                dataType: "json",
+                success: function (data)
+                {
+                    $('#response').html(response);
+                    console.log(data);
+                }
+            });
+        });
+    });
+</script>

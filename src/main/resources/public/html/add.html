@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Add person</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.1.1/jquery.serializejson.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div>Add Person</div>
+        <br>
+        <div>
+            <form method="post" id="ajaxform">
+                <label>Name: </label>
+                <input type="text" id="name" name="name">
+                <br><br>
+                <label>Email </label>
+                <input type="email" id="email" name="email">
+                <p>
+                    <br>
+                    <input type="button" value="Submit" id="add">
+                </p>
+            </form>
+            <div id="response"></div>
+        </div>
+    </body>
+</html>
+<script>
+    $.fn.serializeObject = function ()
+    {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
+    $(document).ready(function () {
+        $("#add").click(function (e) {
+            var data = $('#ajaxform').serializeObject();
+            console.log(data);
+            $.ajax({
+                type: 'POST',
+                url: '/create',
+                contentType: "application/x-www-form-urlencoded",
+                dataType: 'json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    $('#response').html(response);
+                    console.log(response);
+                },
+                error: function (request, textStatus, errorThrown) {
+                    alert("error " + errorThrown);
+                }
+            });
+        });
+    });
+</script>
